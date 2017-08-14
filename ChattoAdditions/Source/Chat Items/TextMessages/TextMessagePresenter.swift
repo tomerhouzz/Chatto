@@ -70,7 +70,7 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
         let updateClosure = { [weak self] (old: Any, new: Any) -> Void in
             self?.updateCurrentCell()
         }
-        viewModel.avatarImage.observe(self, closure: updateClosure)
+        viewModel.avatarImageUrl.observe(self, closure: updateClosure)
         return viewModel
     }
 

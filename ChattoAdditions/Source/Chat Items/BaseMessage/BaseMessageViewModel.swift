@@ -49,7 +49,7 @@ public protocol MessageViewModelProtocol: class { // why class? https://gist.git
     var showsFailedIcon: Bool { get }
     var date: String { get }
     var status: MessageViewModelStatus { get }
-    var avatarImage: Observable<UIImage?> { set get }
+    var avatarImageUrl: Observable<URL?> { set get }
     func willBeShown() // Optional
     func wasHidden() // Optional
 }
@@ -87,12 +87,12 @@ extension DecoratedMessageViewModelProtocol {
         return self.messageViewModel.showsFailedIcon
     }
 
-    public var avatarImage: Observable<UIImage?> {
+    public var avatarImageUrl: Observable<URL?> {
         get {
-            return self.messageViewModel.avatarImage
+            return self.messageViewModel.avatarImageUrl
         }
         set {
-            self.messageViewModel.avatarImage = newValue
+            self.messageViewModel.avatarImageUrl = newValue
         }
     }
 }
@@ -114,18 +114,18 @@ open class MessageViewModel: MessageViewModelProtocol {
     public let dateFormatter: DateFormatter
     public private(set) var messageModel: MessageModelProtocol
 
-    public init(dateFormatter: DateFormatter, showsTail: Bool, messageModel: MessageModelProtocol, avatarImage: UIImage?) {
+    public init(dateFormatter: DateFormatter, showsTail: Bool, messageModel: MessageModelProtocol, avatarImageUrl: URL?) {
         self.dateFormatter = dateFormatter
         self.showsTail = showsTail
         self.messageModel = messageModel
-        self.avatarImage = Observable<UIImage?>(avatarImage)
+        self.avatarImageUrl = Observable<URL?>(avatarImageUrl)
     }
 
     open var showsFailedIcon: Bool {
         return self.status == .failed
     }
 
-    public var avatarImage: Observable<UIImage?>
+    public var avatarImageUrl: Observable<URL?>
 }
 
 public class MessageViewModelDefaultBuilder {
@@ -141,7 +141,7 @@ public class MessageViewModelDefaultBuilder {
     }()
 
     public func createMessageViewModel(_ message: MessageModelProtocol) -> MessageViewModelProtocol {
-        // Override to use default avatarImage
-        return MessageViewModel(dateFormatter: MessageViewModelDefaultBuilder.dateFormatter, showsTail: false, messageModel: message, avatarImage: nil)
+        // Override to use default avatarImageUrl
+        return MessageViewModel(dateFormatter: MessageViewModelDefaultBuilder.dateFormatter, showsTail: false, messageModel: message, avatarImageUrl: nil)
     }
 }

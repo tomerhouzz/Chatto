@@ -24,6 +24,7 @@
 
 import UIKit
 import Chatto
+import HouzzCore
 
 public protocol BaseMessageCollectionViewCellStyleProtocol {
     func avatarSize(viewModel: MessageViewModelProtocol) -> CGSize // .zero => no avatar
@@ -124,10 +125,11 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         return nil
     }
 
-    public private(set) var avatarView: UIImageView!
-    func createAvatarView() -> UIImageView! {
-        let avatarImageView = UIImageView(frame: CGRect.zero)
+    public private(set) var avatarView: BackgroundUrlImageView!
+    func createAvatarView() -> BackgroundUrlImageView! {
+        let avatarImageView = BackgroundUrlImageView(frame: CGRect.zero)
         avatarImageView.isUserInteractionEnabled = true
+        avatarImageView.isRoundedCorners = true
         return avatarImageView
     }
 
@@ -206,7 +208,8 @@ open class BaseMessageCollectionViewCell<BubbleViewType>: UICollectionViewCell, 
         self.accessoryTimestampView.attributedText = style.attributedStringForDate(viewModel.date)
         let avatarImageSize = baseStyle.avatarSize(viewModel: messageViewModel)
         if avatarImageSize != CGSize.zero {
-            self.avatarView.image = self.messageViewModel.avatarImage.value
+            let url = self.messageViewModel.avatarImageUrl.value
+            self.avatarView.set(url: url, placeholder: nil, contentMode: .scaleAspectFill)
         }
         self.setNeedsLayout()
     }
