@@ -138,7 +138,7 @@ open class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionVie
     }
 
     open func placeholderIconImage(viewModel: PhotoMessageViewModelProtocol) -> (icon: UIImage?, tintColor: UIColor?) {
-        if viewModel.image.value == nil && viewModel.transferStatus.value == .failed {
+        if viewModel.imageUrl.value == nil && viewModel.transferStatus.value == .failed {
             let tintColor = viewModel.isIncoming ? self.colors.placeholderIconTintIncoming : self.colors.placeholderIconTintOutgoing
             return (self.placeholderIcon, tintColor)
         }
@@ -166,7 +166,7 @@ open class PhotoMessageCollectionViewCellDefaultStyle: PhotoMessageCollectionVie
     }
 
     open func overlayColor(viewModel: PhotoMessageViewModelProtocol) -> UIColor? {
-        let showsOverlay = viewModel.image.value != nil && (viewModel.transferStatus.value == .transfering || viewModel.status != MessageViewModelStatus.success)
+        let showsOverlay = viewModel.imageUrl.value != nil && (viewModel.transferStatus.value == .transfering || viewModel.status != MessageViewModelStatus.success)
         return showsOverlay ? self.colors.overlayColor : nil
     }
 

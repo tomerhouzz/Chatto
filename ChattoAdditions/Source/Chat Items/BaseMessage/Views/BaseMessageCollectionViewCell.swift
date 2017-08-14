@@ -27,7 +27,7 @@ import Chatto
 
 public protocol BaseMessageCollectionViewCellStyleProtocol {
     func avatarSize(viewModel: MessageViewModelProtocol) -> CGSize // .zero => no avatar
-    func avatarVerticalAlignment(viewModel: MessageViewModelProtocol) -> VerticalAlignment
+    func avatarVerticalAlignment(viewModel: MessageViewModelProtocol) -> ChattoVerticalAlignment
     var failedIcon: UIImage { get }
     var failedIconHighlighted: UIImage { get }
     func attributedStringForDate(_ date: String) -> NSAttributedString
@@ -417,5 +417,5 @@ struct BaseMessageLayoutModelParameters {
     let isIncoming: Bool
     let isFailed: Bool
     let avatarSize: CGSize
-    let avatarVerticalAlignment: VerticalAlignment
+    let avatarVerticalAlignment: ChattoVerticalAlignment
 }

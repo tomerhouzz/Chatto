@@ -80,8 +80,8 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
 
     public struct AvatarStyle {
         let size: CGSize
-        let alignment: VerticalAlignment
-        public init(size: CGSize = .zero, alignment: VerticalAlignment = .bottom) {
+        let alignment: ChattoVerticalAlignment
+        public init(size: CGSize = .zero, alignment: ChattoVerticalAlignment = .bottom) {
             self.size = size
             self.alignment = alignment
         }
@@ -149,7 +149,7 @@ open class BaseMessageCollectionViewCellDefaultStyle: BaseMessageCollectionViewC
         return self.avatarStyle.size
     }
 
-    open func avatarVerticalAlignment(viewModel: MessageViewModelProtocol) -> VerticalAlignment {
+    open func avatarVerticalAlignment(viewModel: MessageViewModelProtocol) -> ChattoVerticalAlignment {
         return self.avatarStyle.alignment
     }
 

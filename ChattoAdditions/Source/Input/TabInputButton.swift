@@ -46,14 +46,14 @@ public class TabInputButton: UIButton {
         if let accessibilityIdentifier = accessibilityID {
             button.accessibilityIdentifier = accessibilityIdentifier
         }
-        button.size = appearance.size
+        button._size = appearance.size
         return button
     }
 
-    private var size: CGSize?
+    private var _size: CGSize?
 
     public override var intrinsicContentSize: CGSize {
-        if let size = self.size {
+        if let size = self._size {
             return size
         }
         return super.intrinsicContentSize

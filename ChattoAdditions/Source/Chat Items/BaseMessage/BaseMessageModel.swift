@@ -35,7 +35,7 @@ public protocol MessageModelProtocol: ChatItemProtocol {
     var senderId: String { get }
     var isIncoming: Bool { get }
     var date: Date { get }
-    var status: MessageStatus { get }
+    var status: MessageStatus { get set }
 }
 
 public protocol DecoratedMessageModelProtocol: MessageModelProtocol {

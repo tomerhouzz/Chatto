@@ -23,9 +23,10 @@
 */
 
 import UIKit
+import HouzzCore
 
 public protocol PhotoMessageModelProtocol: DecoratedMessageModelProtocol {
-    var image: UIImage { get }
+    var imageUrl: URL { get }
     var imageSize: CGSize { get }
 }
 
@@ -34,11 +35,30 @@ open class PhotoMessageModel<MessageModelT: MessageModelProtocol>: PhotoMessageM
         return self._messageModel
     }
     public let _messageModel: MessageModelT // Can't make messasgeModel: MessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
-    public let image: UIImage
+    public var imageUrl: URL
     public let imageSize: CGSize
-    public init(messageModel: MessageModelT, imageSize: CGSize, image: UIImage) {
+    public init(messageModel: MessageModelT, imageSize: CGSize, imageUrl: URL) {
         self._messageModel = messageModel
         self.imageSize = imageSize
-        self.image = image
+        self.imageUrl = imageUrl
+    }
+    public var socketMessage: SocketMessage?
+    
+    public var status: MessageStatus {
+        get {
+            return _messageModel.status
+        }
+        set {
+            _messageModel.status = newValue
+        }
+    }
+    
+    public var data: [String: Any] {
+        if let socketMessage = socketMessage {
+            return ["_id": socketMessage.identifier, "User": ["_id": socketMessage.senderId, "SenderUrl": socketMessage.senderUrl?.absoluteString], "CreatedAt": socketMessage.createdAt.timeIntervalSince1970, "Type": socketMessage.type, "Url": socketMessage.url!.absoluteString]
+        } else {
+            let profileImage = AppDefaults.shared.user!.profileImage!.absoluteString
+            return ["User": ["_id": senderId, "SenderUrl": profileImage], "CreatedAt": date.timeIntervalSince1970, "Type": type, "Url": imageUrl.absoluteString]
+        }
     }
 }

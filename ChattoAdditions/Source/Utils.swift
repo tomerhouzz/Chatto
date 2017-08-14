@@ -27,13 +27,13 @@ import CoreGraphics
 
 private let scale = UIScreen.main.scale
 
-public enum HorizontalAlignment {
+public enum ChattoHorizontalAlignment {
     case left
     case center
     case right
 }
 
-public enum VerticalAlignment {
+public enum ChattoVerticalAlignment {
     case top
     case center
     case bottom
@@ -54,7 +54,7 @@ public extension CGSize {
         return CGSize(width: self.width.bma_round(), height: self.height.bma_round())
     }
 
-    func bma_rect(inContainer containerRect: CGRect, xAlignament: HorizontalAlignment, yAlignment: VerticalAlignment, dx: CGFloat, dy: CGFloat) -> CGRect {
+    func bma_rect(inContainer containerRect: CGRect, xAlignament: ChattoHorizontalAlignment, yAlignment: ChattoVerticalAlignment, dx: CGFloat, dy: CGFloat) -> CGRect {
         var originX, originY: CGFloat
 
         // Horizontal alignment

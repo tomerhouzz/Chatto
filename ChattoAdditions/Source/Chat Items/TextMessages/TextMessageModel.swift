@@ -23,12 +23,14 @@
 */
 
 import Foundation
+import HouzzCore
 
 public protocol TextMessageModelProtocol: DecoratedMessageModelProtocol {
     var text: String { get }
 }
 
 open class TextMessageModel<MessageModelT: MessageModelProtocol>: TextMessageModelProtocol {
+    
     public var messageModel: MessageModelProtocol {
         return self._messageModel
     }
@@ -37,5 +39,25 @@ open class TextMessageModel<MessageModelT: MessageModelProtocol>: TextMessageMod
     public init(messageModel: MessageModelT, text: String) {
         self._messageModel = messageModel
         self.text = text
+    }
+    
+    public var socketMessage: SocketMessage?
+    
+    public var status: MessageStatus {
+        get {
+            return _messageModel.status
+        }
+        set {
+            _messageModel.status = newValue
+        }
+    }
+    
+    open var data: [String: Any] {
+        if let socketMessage = socketMessage {
+            return ["_id": socketMessage.identifier, "User": ["_id": socketMessage.senderId, "SenderUrl": socketMessage.senderUrl!.absoluteString], "CreatedAt": socketMessage.createdAt.timeIntervalSince1970, "Text": socketMessage.text!, "Type": socketMessage.type]
+        } else {
+            let profileImage = AppDefaults.shared.user!.profileImage!.absoluteString
+            return ["User": ["_id": senderId, "SenderUrl": profileImage], "CreatedAt": date.timeIntervalSince1970, "Text": text, "Type": type]
+        }
     }
 }

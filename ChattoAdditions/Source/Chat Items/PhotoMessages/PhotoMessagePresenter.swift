@@ -66,7 +66,7 @@ open class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
             self?.updateCurrentCell()
         }
         viewModel.avatarImage.observe(self, closure: updateClosure)
-        viewModel.image.observe(self, closure: updateClosure)
+        viewModel.imageUrl.observe(self, closure: updateClosure)
         viewModel.transferDirection.observe(self, closure: updateClosure)
         viewModel.transferProgress.observe(self, closure: updateClosure)
         viewModel.transferStatus.observe(self, closure: updateClosure)

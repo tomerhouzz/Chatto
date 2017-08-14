@@ -23,6 +23,8 @@
 */
 
 import UIKit
+import HouzzCore
+import HouzzUIKit
 
 public protocol PhotoBubbleViewStyleProtocol {
     func maskingImage(viewModel: PhotoMessageViewModelProtocol) -> UIImage
@@ -58,8 +60,8 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
         self.addSubview(self.progressIndicatorView)
     }
 
-    public private(set) lazy var imageView: UIImageView = {
-        let imageView = UIImageView()
+    public private(set) lazy var imageView: BackgroundUrlImageView = {
+        let imageView = BackgroundUrlImageView(frame: .zero)
         imageView.autoresizingMask = UIViewAutoresizing()
         imageView.clipsToBounds = true
         imageView.autoresizesSubviews = false
@@ -154,8 +156,9 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
     }
 
     private func updateImages() {
-        if let image = self.photoMessageViewModel.image.value {
-            self.imageView.image = image
+        if let imageUrl = self.photoMessageViewModel.imageUrl.value {
+            let placeholderImage = self.photoMessageStyle.placeholderBackgroundImage(viewModel: self.photoMessageViewModel)
+            self.imageView.set(url: imageUrl, placeholder: placeholderImage, contentMode: .scaleAspectFill)
             self.placeholderIconView.isHidden = true
         } else {
             self.imageView.image = self.photoMessageStyle.placeholderBackgroundImage(viewModel: self.photoMessageViewModel)
@@ -164,7 +167,7 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
             self.placeholderIconView.tintColor = tintColor
             self.placeholderIconView.isHidden = false
         }
-
+        
         if let overlayColor = self.photoMessageStyle.overlayColor(viewModel: self.photoMessageViewModel) {
             self.overlayView.backgroundColor = overlayColor
             self.overlayView.alpha = 1
