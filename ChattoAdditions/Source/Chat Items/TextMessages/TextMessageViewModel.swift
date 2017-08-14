@@ -23,19 +23,20 @@
 */
 
 import Foundation
+import HouzzCore
 
 public protocol TextMessageViewModelProtocol: DecoratedMessageViewModelProtocol {
     var text: String { get }
 }
 
-open class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: TextMessageViewModelProtocol {
+open class TextMessageViewModel: TextMessageViewModelProtocol {
     public var text: String {
-        return self.textMessage.text
+        return self.textMessage.text!
     }
-    public let textMessage: TextMessageModelT
+    public let textMessage: SocketMessage
     public let messageViewModel: MessageViewModelProtocol
 
-    public init(textMessage: TextMessageModelT, messageViewModel: MessageViewModelProtocol) {
+    public init(textMessage: SocketMessage, messageViewModel: MessageViewModelProtocol) {
         self.textMessage = textMessage
         self.messageViewModel = messageViewModel
     }
@@ -49,18 +50,18 @@ open class TextMessageViewModel<TextMessageModelT: TextMessageModelProtocol>: Te
     }
 }
 
-open class TextMessageViewModelDefaultBuilder<TextMessageModelT: TextMessageModelProtocol>: ViewModelBuilderProtocol {
+open class TextMessageViewModelDefaultBuilder: ViewModelBuilderProtocol {
     public init() {}
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 
-    open func createViewModel(_ textMessage: TextMessageModelT) -> TextMessageViewModel<TextMessageModelT> {
+    open func createViewModel(_ textMessage: SocketMessage) -> TextMessageViewModel {
         let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(textMessage)
         let textMessageViewModel = TextMessageViewModel(textMessage: textMessage, messageViewModel: messageViewModel)
         return textMessageViewModel
     }
 
     open func canCreateViewModel(fromModel model: Any) -> Bool {
-        return model is TextMessageModelT
+        return model is SocketMessage
     }
 }

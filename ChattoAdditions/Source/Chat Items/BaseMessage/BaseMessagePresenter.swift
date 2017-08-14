@@ -24,12 +24,12 @@
 
 import Foundation
 import Chatto
+import HouzzCore
 
 public protocol ViewModelBuilderProtocol {
-    associatedtype ModelT: MessageModelProtocol
     associatedtype ViewModelT: MessageViewModelProtocol
     func canCreateViewModel(fromModel model: Any) -> Bool
-    func createViewModel(_ model: ModelT) -> ViewModelT
+    func createViewModel(_ model: SocketMessage) -> ViewModelT
 }
 
 public protocol BaseMessageInteractionHandlerProtocol {
@@ -48,11 +48,10 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
     InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT,
     BubbleViewT: UIView, BubbleViewT:MaximumLayoutWidthSpecificable, BubbleViewT: BackgroundSizingQueryable {
     public typealias CellT = BaseMessageCollectionViewCell<BubbleViewT>
-    public typealias ModelT = ViewModelBuilderT.ModelT
     public typealias ViewModelT = ViewModelBuilderT.ViewModelT
 
     public init (
-        messageModel: ModelT,
+        messageModel: SocketMessage,
         viewModelBuilder: ViewModelBuilderT,
         interactionHandler: InteractionHandlerT?,
         sizingCell: BaseMessageCollectionViewCell<BubbleViewT>,
@@ -64,7 +63,7 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
             self.interactionHandler = interactionHandler
     }
 
-    public let messageModel: ModelT
+    public let messageModel: SocketMessage
     public let sizingCell: BaseMessageCollectionViewCell<BubbleViewT>
     public let viewModelBuilder: ViewModelBuilderT
     public let interactionHandler: InteractionHandlerT?

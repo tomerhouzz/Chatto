@@ -23,6 +23,7 @@
 */
 
 import Foundation
+import HouzzCore
 
 open class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 : BaseMessagePresenter<PhotoBubbleView, ViewModelBuilderT, InteractionHandlerT> where
@@ -30,13 +31,11 @@ open class PhotoMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     ViewModelBuilderT.ViewModelT: PhotoMessageViewModelProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
     InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
-    public typealias ModelT = ViewModelBuilderT.ModelT
     public typealias ViewModelT = ViewModelBuilderT.ViewModelT
-
     public let photoCellStyle: PhotoMessageCollectionViewCellStyleProtocol
 
     public init (
-        messageModel: ModelT,
+        messageModel: SocketMessage,
         viewModelBuilder: ViewModelBuilderT,
         interactionHandler: InteractionHandlerT?,
         sizingCell: PhotoMessageCollectionViewCell,

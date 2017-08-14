@@ -24,6 +24,7 @@
 
 import Foundation
 import Chatto
+import HouzzCore
 
 open class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>
 : ChatItemPresenterBuilderProtocol where
@@ -32,7 +33,6 @@ open class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
     InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
     typealias ViewModelT = ViewModelBuilderT.ViewModelT
-    typealias ModelT = ViewModelBuilderT.ModelT
 
     public init(
         viewModelBuilder: ViewModelBuilderT,
@@ -68,7 +68,7 @@ open class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>
     open func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
         assert(self.canHandleChatItem(chatItem))
         return TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>(
-            messageModel: chatItem as! ModelT,
+            messageModel: chatItem as! SocketMessage,
             viewModelBuilder: self.viewModelBuilder,
             interactionHandler: self.interactionHandler,
             sizingCell: sizingCell,

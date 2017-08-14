@@ -23,6 +23,7 @@
 */
 
 import UIKit
+import HouzzCore
 
 open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
 : BaseMessagePresenter<TextBubbleView, ViewModelBuilderT, InteractionHandlerT> where
@@ -30,11 +31,10 @@ open class TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>
     ViewModelBuilderT.ViewModelT: TextMessageViewModelProtocol,
     InteractionHandlerT: BaseMessageInteractionHandlerProtocol,
     InteractionHandlerT.ViewModelT == ViewModelBuilderT.ViewModelT {
-    public typealias ModelT = ViewModelBuilderT.ModelT
     public typealias ViewModelT = ViewModelBuilderT.ViewModelT
 
     public init (
-        messageModel: ModelT,
+        messageModel: SocketMessage,
         viewModelBuilder: ViewModelBuilderT,
         interactionHandler: InteractionHandlerT?,
         sizingCell: TextMessageCollectionViewCell,

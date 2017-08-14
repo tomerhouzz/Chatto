@@ -23,6 +23,7 @@
 */
 
 import UIKit
+import HouzzCore
 
 public enum TransferDirection {
     case upload
@@ -44,26 +45,23 @@ public protocol PhotoMessageViewModelProtocol: DecoratedMessageViewModelProtocol
     var imageSize: CGSize { get }
 }
 
-open class PhotoMessageViewModel<PhotoMessageModelT: PhotoMessageModelProtocol>: PhotoMessageViewModelProtocol {
-    public var photoMessage: PhotoMessageModelProtocol {
-        return self._photoMessage
-    }
-    public let _photoMessage: PhotoMessageModelT // Can't make photoMessage: PhotoMessageModelT: https://gist.github.com/diegosanchezr/5a66c7af862e1117b556
+open class PhotoMessageViewModel: PhotoMessageViewModelProtocol {
+    public var photoMessage: SocketMessage
     public var transferStatus: Observable<TransferStatus> = Observable(.idle)
     public var transferProgress: Observable<Double> = Observable(0)
     public var transferDirection: Observable<TransferDirection> = Observable(.download)
     public var imageUrl: Observable<URL?>
     open var imageSize: CGSize {
-        return self.photoMessage.imageSize
+        return CGSize(width: 200, height: 200)
     }
     public let messageViewModel: MessageViewModelProtocol
     open var showsFailedIcon: Bool {
         return self.messageViewModel.showsFailedIcon || self.transferStatus.value == .failed
     }
 
-    public init(photoMessage: PhotoMessageModelT, messageViewModel: MessageViewModelProtocol) {
-        self._photoMessage = photoMessage
-        self.imageUrl = Observable(photoMessage.imageUrl)
+    public init(photoMessage: SocketMessage, messageViewModel: MessageViewModelProtocol) {
+        self.photoMessage = photoMessage
+        self.imageUrl = Observable(photoMessage.url)
         self.messageViewModel = messageViewModel
     }
 
@@ -76,18 +74,18 @@ open class PhotoMessageViewModel<PhotoMessageModelT: PhotoMessageModelProtocol>:
     }
 }
 
-open class PhotoMessageViewModelDefaultBuilder<PhotoMessageModelT: PhotoMessageModelProtocol>: ViewModelBuilderProtocol {
+open class PhotoMessageViewModelDefaultBuilder: ViewModelBuilderProtocol {
     public init() {}
 
     let messageViewModelBuilder = MessageViewModelDefaultBuilder()
 
-    open func createViewModel(_ model: PhotoMessageModelT) -> PhotoMessageViewModel<PhotoMessageModelT> {
+    open func createViewModel(_ model: SocketMessage) -> PhotoMessageViewModel {
         let messageViewModel = self.messageViewModelBuilder.createMessageViewModel(model)
         let photoMessageViewModel = PhotoMessageViewModel(photoMessage: model, messageViewModel: messageViewModel)
         return photoMessageViewModel
     }
 
     open func canCreateViewModel(fromModel model: Any) -> Bool {
-        return model is PhotoMessageModelT
+        return model is SocketMessage
     }
 }

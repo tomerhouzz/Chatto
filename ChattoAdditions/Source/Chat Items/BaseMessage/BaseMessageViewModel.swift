@@ -23,6 +23,7 @@
 */
 
 import Foundation
+import HouzzCore
 
 public enum MessageViewModelStatus {
     case success
@@ -30,7 +31,7 @@ public enum MessageViewModelStatus {
     case failed
 }
 
-public extension MessageStatus {
+public extension SocketMessageStatus {
     public func viewModelStatus() -> MessageViewModelStatus {
         switch self {
         case .success:
@@ -108,13 +109,13 @@ open class MessageViewModel: MessageViewModelProtocol {
 
     open var showsTail: Bool
     open lazy var date: String = {
-        return self.dateFormatter.string(from: self.messageModel.date as Date)
+        return self.dateFormatter.string(from: self.messageModel.createdAt as Date)
     }()
 
     public let dateFormatter: DateFormatter
-    public private(set) var messageModel: MessageModelProtocol
+    public private(set) var messageModel: SocketMessage
 
-    public init(dateFormatter: DateFormatter, showsTail: Bool, messageModel: MessageModelProtocol, avatarImageUrl: URL?) {
+    public init(dateFormatter: DateFormatter, showsTail: Bool, messageModel: SocketMessage, avatarImageUrl: URL?) {
         self.dateFormatter = dateFormatter
         self.showsTail = showsTail
         self.messageModel = messageModel
@@ -140,7 +141,7 @@ public class MessageViewModelDefaultBuilder {
         return formatter
     }()
 
-    public func createMessageViewModel(_ message: MessageModelProtocol) -> MessageViewModelProtocol {
+    public func createMessageViewModel(_ message: SocketMessage) -> MessageViewModelProtocol {
         // Override to use default avatarImageUrl
         return MessageViewModel(dateFormatter: MessageViewModelDefaultBuilder.dateFormatter, showsTail: false, messageModel: message, avatarImageUrl: nil)
     }
