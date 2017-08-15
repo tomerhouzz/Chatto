@@ -116,6 +116,7 @@ public final class ActionBubbleView: UIView, MaximumLayoutWidthSpecificable, Bac
         button.backgroundColor = UIColor.houzzDarkGreen()
         button.setTitle("Continue", for: .normal)
         button.sizeToFit()
+        button.isUserInteractionEnabled = false
         return button
     }()
 
