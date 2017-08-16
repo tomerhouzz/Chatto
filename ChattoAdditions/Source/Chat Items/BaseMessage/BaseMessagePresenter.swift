@@ -34,11 +34,11 @@ public protocol ViewModelBuilderProtocol {
 
 public protocol BaseMessageInteractionHandlerProtocol {
     associatedtype ViewModelT
-    func userDidTapOnFailIcon(viewModel: ViewModelT, failIconView: UIView)
-    func userDidTapOnAvatar(viewModel: ViewModelT)
-    func userDidTapOnBubble(viewModel: ViewModelT)
-    func userDidBeginLongPressOnBubble(viewModel: ViewModelT)
-    func userDidEndLongPressOnBubble(viewModel: ViewModelT)
+    func userDidTapOnFailIcon(cell: UIView, viewModel: ViewModelT, failIconView: UIView)
+    func userDidTapOnAvatar(cell: UIView, viewModel: ViewModelT)
+    func userDidTapOnBubble(cell: UIView, viewModel: ViewModelT)
+    func userDidBeginLongPressOnBubble(cell: UIView, viewModel: ViewModelT)
+    func userDidEndLongPressOnBubble(cell: UIView, viewModel: ViewModelT)
 }
 
 open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandlerT>: BaseChatItemPresenter<BaseMessageCollectionViewCell<BubbleViewT>> where
@@ -102,23 +102,23 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
             cell.messageViewModel = self.messageViewModel
             cell.onBubbleTapped = { [weak self] (cell) in
                 guard let sSelf = self else { return }
-                sSelf.onCellBubbleTapped()
+                sSelf.onCellBubbleTapped(cell: cell)
             }
             cell.onBubbleLongPressBegan = { [weak self] (cell) in
                 guard let sSelf = self else { return }
-                sSelf.onCellBubbleLongPressBegan()
+                sSelf.onCellBubbleLongPressBegan(cell: cell)
             }
             cell.onBubbleLongPressEnded = { [weak self] (cell) in
                 guard let sSelf = self else { return }
-                sSelf.onCellBubbleLongPressEnded()
+                sSelf.onCellBubbleLongPressEnded(cell: cell)
             }
             cell.onAvatarTapped = { [weak self] (cell) in
                 guard let sSelf = self else { return }
-                sSelf.onCellAvatarTapped()
+                sSelf.onCellAvatarTapped(cell: cell)
             }
             cell.onFailedButtonTapped = { [weak self] (cell) in
                 guard let sSelf = self else { return }
-                sSelf.onCellFailedButtonTapped(cell.failedButton)
+                sSelf.onCellFailedButtonTapped(cell: cell, cell.failedButton)
             }
             additionalConfiguration?()
         }, animated: animated, completion: nil)
@@ -174,23 +174,23 @@ open class BaseMessagePresenter<BubbleViewT, ViewModelBuilderT, InteractionHandl
         return false
     }
 
-    open func onCellBubbleTapped() {
-        self.interactionHandler?.userDidTapOnBubble(viewModel: self.messageViewModel)
+    open func onCellBubbleTapped(cell: CellT) {
+        self.interactionHandler?.userDidTapOnBubble(cell: cell, viewModel: self.messageViewModel)
     }
 
-    open func onCellBubbleLongPressBegan() {
-        self.interactionHandler?.userDidBeginLongPressOnBubble(viewModel: self.messageViewModel)
+    open func onCellBubbleLongPressBegan(cell: CellT) {
+        self.interactionHandler?.userDidBeginLongPressOnBubble(cell: cell, viewModel: self.messageViewModel)
     }
 
-    open func onCellBubbleLongPressEnded() {
-        self.interactionHandler?.userDidEndLongPressOnBubble(viewModel: self.messageViewModel)
+    open func onCellBubbleLongPressEnded(cell: CellT) {
+        self.interactionHandler?.userDidEndLongPressOnBubble(cell: cell, viewModel: self.messageViewModel)
     }
 
-    open func onCellAvatarTapped() {
-        self.interactionHandler?.userDidTapOnAvatar(viewModel: self.messageViewModel)
+    open func onCellAvatarTapped(cell: CellT) {
+        self.interactionHandler?.userDidTapOnAvatar(cell: cell, viewModel: self.messageViewModel)
     }
 
-    open func onCellFailedButtonTapped(_ failedButtonView: UIView) {
-        self.interactionHandler?.userDidTapOnFailIcon(viewModel: self.messageViewModel, failIconView: failedButtonView)
+    open func onCellFailedButtonTapped(cell: CellT, _ failedButtonView: UIView) {
+        self.interactionHandler?.userDidTapOnFailIcon(cell: cell, viewModel: self.messageViewModel, failIconView: failedButtonView)
     }
 }
