@@ -61,7 +61,7 @@ open class PhotoBubbleView: UIView, MaximumLayoutWidthSpecificable, BackgroundSi
     }
 
     public private(set) lazy var imageView: BackgroundUrlImageView = {
-        let imageView = BackgroundUrlImageView(frame: CGRect(origin:.zero, size:CGSize(width: 200, height: 200)))
+        let imageView = BackgroundUrlImageView(frame: CGRect(origin:.zero, size:CGSize(width: 210, height: 210)))
         imageView.autoresizingMask = UIViewAutoresizing()
         imageView.clipsToBounds = true
         imageView.autoresizesSubviews = false

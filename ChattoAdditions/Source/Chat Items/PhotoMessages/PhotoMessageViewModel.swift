@@ -52,7 +52,7 @@ open class PhotoMessageViewModel: PhotoMessageViewModelProtocol {
     public var transferDirection: Observable<TransferDirection> = Observable(.download)
     public var imageUrl: Observable<URL?>
     open var imageSize: CGSize {
-        return CGSize(width: 200, height: 200)
+        return CGSize(width: 210, height: 210)
     }
     public let messageViewModel: MessageViewModelProtocol
     open var showsFailedIcon: Bool {
