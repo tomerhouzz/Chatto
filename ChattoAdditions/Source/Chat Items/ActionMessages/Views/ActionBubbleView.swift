@@ -113,7 +113,8 @@ public final class ActionBubbleView: UIView, MaximumLayoutWidthSpecificable, Bac
     }()
     private var button: UIButton = {
         let button = UIButton(type: UIButtonType.custom)
-        button.backgroundColor = UIColor.houzzDarkGreen()
+        button.backgroundColor = UIColor.white
+        button.setTitleColor(UIColor(webColor: 0x55A32A, andAlpha: 1), for: .normal)
         button.setTitle("Continue", for: .normal)
         button.sizeToFit()
         button.isUserInteractionEnabled = false

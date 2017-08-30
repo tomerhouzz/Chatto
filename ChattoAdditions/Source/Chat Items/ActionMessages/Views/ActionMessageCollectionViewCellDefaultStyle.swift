@@ -79,22 +79,29 @@ open class ActionMessageCollectionViewCellDefaultStyle: ActionMessageCollectionV
 
     lazy private var images: [ImageKey: UIImage] = {
         return [
-            .template(isIncoming: true, showsTail: true) : self.bubbleImages.incomingTail(),
-            .template(isIncoming: true, showsTail: false) : self.bubbleImages.incomingNoTail(),
-            .template(isIncoming: false, showsTail: true) : self.bubbleImages.outgoingTail(),
-            .template(isIncoming: false, showsTail: false) : self.bubbleImages.outgoingNoTail()
+            .template(isIncoming: true, showsTail: true, isRobot: false) : self.bubbleImages.incomingTail(),
+            .template(isIncoming: true, showsTail: false, isRobot: false) : self.bubbleImages.incomingNoTail(),
+            .template(isIncoming: false, showsTail: true, isRobot: false) : self.bubbleImages.outgoingTail(),
+            .template(isIncoming: false, showsTail: false, isRobot: false) : self.bubbleImages.outgoingNoTail(),
+            .template(isIncoming: true, showsTail: false, isRobot: true) : self.bubbleImages.incomingTail(),
+            .template(isIncoming: true, showsTail: true, isRobot: true) : self.bubbleImages.incomingTail()
         ]
     }()
 
     lazy var font: UIFont = self.textStyle.font()
     lazy var incomingColor: UIColor = self.textStyle.incomingColor()
     lazy var outgoingColor: UIColor = self.textStyle.outgoingColor()
+    lazy var robotTextColor: UIColor = UIColor.white
 
     open func textFont(viewModel: ActionMessageViewModelProtocol, isSelected: Bool) -> UIFont {
         return self.font
     }
 
     open func textColor(viewModel: ActionMessageViewModelProtocol, isSelected: Bool) -> UIColor {
+        let socketMessage = (viewModel as! ActionMessageViewModel).textMessage
+        if socketMessage.senderId == "robot" {
+            return robotTextColor
+        }
         return viewModel.isIncoming ? self.incomingColor : self.outgoingColor
     }
 
@@ -107,14 +114,16 @@ open class ActionMessageCollectionViewCellDefaultStyle: ActionMessageCollectionV
     }
 
     open func bubbleImage(viewModel: ActionMessageViewModelProtocol, isSelected: Bool) -> UIImage {
-        let key = ImageKey.normal(isIncoming: viewModel.isIncoming, status: viewModel.status, showsTail: viewModel.showsTail, isSelected: isSelected)
+        let socketMessage = (viewModel as! ActionMessageViewModel).textMessage
+
+        let key = ImageKey.normal(isIncoming: viewModel.isIncoming, status: viewModel.status, showsTail: viewModel.showsTail, isSelected: isSelected, isRobot:socketMessage.senderId == "robot")
 
         if let image = self.images[key] {
             return image
         } else {
-            let templateKey = ImageKey.template(isIncoming: viewModel.isIncoming, showsTail: viewModel.showsTail)
+            let templateKey = ImageKey.template(isIncoming: viewModel.isIncoming, showsTail: viewModel.showsTail, isRobot:socketMessage.senderId == "robot")
             if let image = self.images[templateKey] {
-                let image = self.createImage(templateImage: image, isIncoming: viewModel.isIncoming, status: viewModel.status, isSelected: isSelected)
+                let image = self.createImage(templateImage: image, isIncoming: viewModel.isIncoming, status: viewModel.status, isSelected: isSelected, isRobot:socketMessage.senderId == "robot")
                 self.images[key] = image
                 return image
             }
@@ -124,9 +133,12 @@ open class ActionMessageCollectionViewCellDefaultStyle: ActionMessageCollectionV
         return UIImage()
     }
 
-    open func createImage(templateImage image: UIImage, isIncoming: Bool, status: MessageViewModelStatus, isSelected: Bool) -> UIImage {
+    open func createImage(templateImage image: UIImage, isIncoming: Bool, status: MessageViewModelStatus, isSelected: Bool, isRobot: Bool) -> UIImage {
         var color = isIncoming ? self.baseStyle.baseColorIncoming : self.baseStyle.baseColorOutgoing
 
+        if isRobot {
+            color = UIColor(webColor: 0x55A32A, andAlpha: 1)
+        }
         switch status {
         case .success:
             break
@@ -142,15 +154,15 @@ open class ActionMessageCollectionViewCellDefaultStyle: ActionMessageCollectionV
     }
 
     private enum ImageKey: Hashable {
-        case template(isIncoming: Bool, showsTail: Bool)
-        case normal(isIncoming: Bool, status: MessageViewModelStatus, showsTail: Bool, isSelected: Bool)
+        case template(isIncoming: Bool, showsTail: Bool, isRobot: Bool)
+        case normal(isIncoming: Bool, status: MessageViewModelStatus, showsTail: Bool, isSelected: Bool, isRobot: Bool)
 
         var hashValue: Int {
             switch self {
-            case let .template(isIncoming: isIncoming, showsTail: showsTail):
-                return Chatto.bma_combine(hashes: [1 /*template*/, isIncoming.hashValue, showsTail.hashValue])
-            case let .normal(isIncoming: isIncoming, status: status, showsTail: showsTail, isSelected: isSelected):
-                return Chatto.bma_combine(hashes: [2 /*normal*/, isIncoming.hashValue, status.hashValue, showsTail.hashValue, isSelected.hashValue])
+            case let .template(isIncoming: isIncoming, showsTail: showsTail, isRobot: isRobot):
+                return Chatto.bma_combine(hashes: [1 /*template*/, isIncoming.hashValue, showsTail.hashValue, isRobot.hashValue])
+            case let .normal(isIncoming: isIncoming, status: status, showsTail: showsTail, isSelected: isSelected, isRobot: isRobot):
+                return Chatto.bma_combine(hashes: [2 /*normal*/, isIncoming.hashValue, status.hashValue, showsTail.hashValue, isSelected.hashValue, isRobot.hashValue])
             }
         }
 

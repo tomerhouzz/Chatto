@@ -67,6 +67,8 @@ open class TextMessagePresenterBuilder<ViewModelBuilderT, InteractionHandlerT>
 
     open func createPresenterWithChatItem(_ chatItem: ChatItemProtocol) -> ChatItemPresenterProtocol {
         assert(self.canHandleChatItem(chatItem))
+        let textCellStyle = self.textCellStyle
+        
         return TextMessagePresenter<ViewModelBuilderT, InteractionHandlerT>(
             messageModel: chatItem as! SocketMessage,
             viewModelBuilder: self.viewModelBuilder,
