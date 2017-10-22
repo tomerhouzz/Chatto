@@ -98,7 +98,7 @@ public final class ActionBubbleView: UIView, MaximumLayoutWidthSpecificable, Bac
             textView.backgroundColor = UIColor.clear
         })
         textView.isEditable = false
-        textView.isSelectable = true
+        textView.isSelectable = false
         textView.dataDetectorTypes = .all
         textView.scrollsToTop = false
         textView.isScrollEnabled = false
